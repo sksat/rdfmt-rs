@@ -14,7 +14,7 @@ fn schema_url(file: &str) -> String {
 }
 
 fn download_schema(dir: &str, file: &str) -> Result<(), Box<dyn std::error::Error>> {
-    let url = schema_url(&file);
+    let url = schema_url(file);
     let schema = reqwest::blocking::get(url)?.text()?;
     let mut file = fs::File::create(format!("{}/{}", dir, file))?;
     file.write_all(schema.as_bytes())?;
@@ -52,7 +52,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut code = String::new();
 
     for file in schema_files {
-        download_schema(&schema_dir, &file)?;
+        download_schema(&schema_dir, file)?;
         //let name = Path::new(&file).file_prefix().unwrap();
         let name = file.split('.').next().unwrap();
 
