@@ -1,0 +1,9 @@
+.git/*
+target/*
+
+Dockerfile
+docker-compose.yml
+
+README.md
+LICENSE
+docs/*
