@@ -62,8 +62,8 @@ pub mod {} {{
     use serde::{{ Serialize, Deserialize }};
     schemafy::schemafy!(root: {} "{}/{}");
 }}"#,
-            name,
             name.to_lowercase(),
+            name,
             &schema_dir,
             file
         );
