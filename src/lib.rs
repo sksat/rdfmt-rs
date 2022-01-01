@@ -30,11 +30,126 @@ pub enum Severity {
     Info = 3,
 }
 
-impl From<Severity> for SeverityImpl {
-    fn from(from: Severity) -> SeverityImpl {
-        let name: SeverityStr = serde_variant::to_variant_name(&from)
+impl Severity {
+    fn to_variant_name(&self) -> String {
+        serde_variant::to_variant_name(&self)
             .expect("Severity variant name")
-            .to_string();
-        SeverityImpl::Variant0(name)
+            .to_string()
+    }
+}
+
+impl From<Severity> for schema::diagnostic::DiagnosticSeverity {
+    fn from(from: Severity) -> Self {
+        Self::Variant0(from.to_variant_name())
+    }
+}
+impl From<Severity> for schema::diagnosticresult::DiagnosticResultSeverity {
+    fn from(from: Severity) -> Self {
+        Self::Variant0(from.to_variant_name())
+    }
+}
+
+impl From<Diagnostic> for schema::diagnosticresult::DiagnosticResultItemDiagnostics {
+    fn from(from: Diagnostic) -> Self {
+        let serialized = serde_json::to_string(&from).expect("serialize failed");
+        serde_json::from_str(&serialized).expect("deserialize failed")
+    }
+}
+
+impl From<Source> for schema::diagnosticresult::ReviewdogRdfSource {
+    fn from(from: Source) -> Self {
+        let serialized = serde_json::to_string(&from).expect("serialize failed");
+        serde_json::from_str(&serialized).expect("deserialize failed")
+    }
+}
+
+#[derive(Debug)]
+pub struct Rule {
+    source: Source,
+    code: Code,
+}
+
+impl Diagnostic {
+    pub fn rule(self, rule: Rule) -> Self {
+        let mut d = self;
+        d.source = Some(rule.source);
+        d.code = Some(rule.code);
+        d
+    }
+
+    // severity
+    pub fn error() -> Self {
+        Self::from_severity(Severity::Error)
+    }
+    pub fn warning() -> Self {
+        Self::from_severity(Severity::Warning)
+    }
+    pub fn info() -> Self {
+        Self::from_severity(Severity::Info)
+    }
+    pub fn from_severity(severity: Severity) -> Self {
+        Self {
+            severity: Some(severity.into()),
+            ..Default::default()
+        }
+    }
+
+    pub fn location(self, location: Location) -> Self {
+        let mut d = self;
+        d.location = Some(location);
+        d
+    }
+
+    pub fn message(self, message: String) -> Self {
+        let mut d = self;
+        d.message = Some(message);
+        d
+    }
+
+    pub fn suggest(self, range: Range, suggest: String) -> Self {
+        let mut d = self.clone();
+        let suggest = Suggestion {
+            range: Some(range),
+            text: Some(suggest),
+        };
+        if let Some(ref mut s) = d.suggestions {
+            s.push(suggest);
+        }
+        d
+    }
+}
+
+impl DiagnosticResult {
+    pub fn source(self, source: Source) -> Self {
+        let mut d = self;
+        d.source = Some(source.into());
+        d
+    }
+
+    // severity
+    pub fn error() -> Self {
+        Self::from_severity(Severity::Error)
+    }
+    pub fn warning() -> Self {
+        Self::from_severity(Severity::Warning)
+    }
+    pub fn info() -> Self {
+        Self::from_severity(Severity::Info)
+    }
+    pub fn from_severity(severity: Severity) -> Self {
+        Self {
+            severity: Some(severity.into()),
+            ..Default::default()
+        }
+    }
+
+    pub fn diagnost(self, diagnostic: Diagnostic) -> Self {
+        let mut d = self;
+        if let Some(ref mut ds) = d.diagnostics {
+            ds.push(diagnostic.into());
+        } else {
+            d.diagnostics = Some(vec![diagnostic.into()]);
+        }
+        d
     }
 }
