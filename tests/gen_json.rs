@@ -24,7 +24,7 @@ fn gen_rdjsonl() {
     };
 
     assert_eq!(
-        r#"{"location":{"path":"<file path>","range":{"start":{"column":15,"line":14}}},"message":"<msg>","severity": "ERROR"}"#,
+        r#"{"location":{"path":"<file path>","range":{"start":{"column":15,"line":14}}},"message":"<msg>","severity":"ERROR"}"#,
         serde_json::to_string(&rdjsonl).unwrap(),
     );
 }
