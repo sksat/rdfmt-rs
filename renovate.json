@@ -12,6 +12,13 @@
       "depNameTemplate": "rust",
       "lookupNameTemplate": "rust-lang/rust",
       "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["^build.rs$"],
+      "matchStrings": [
+        "let repository = \"(?<depName>.*?)\";\n\\s+let tag = \"(?<currentValue>.*?)\";\n"
+      ],
+      "datasourceTemplate": "github-releases"
     }
   ]
 }
