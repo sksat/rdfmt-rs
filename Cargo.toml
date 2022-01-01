@@ -1,6 +1,17 @@
 [package]
-name = "rust-template"
+name = "rdfmt"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+default = ["with-serde"]
+with-serde = ["protobuf/with-serde"]
+
 [dependencies]
+serde = { version = "1.0.132", features = ["derive"] }
+serde_json = "1.0.73"
+protobuf = { version = "3.0.0-alpha.2", features = ["with-bytes"] }
+
+[build-dependencies]
+reqwest = { version = "0.11.8", features = ["blocking"] }
+protobuf-codegen-pure = "3.0.0-alpha.2"
