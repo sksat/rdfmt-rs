@@ -106,14 +106,27 @@ impl Diagnostic {
         d
     }
 
-    pub fn suggest(self, range: Range, suggest: String) -> Self {
+    pub fn code(self, code: Code) -> Self {
+        let mut d = self;
+        d.code = Some(code);
+        d
+    }
+
+    pub fn suggest(self, suggest: String) -> Self {
         let mut d = self.clone();
+        let range = self
+            .location
+            .expect("location is None")
+            .range
+            .expect("location.range is None");
         let suggest = Suggestion {
             range: Some(range),
             text: Some(suggest),
         };
         if let Some(ref mut s) = d.suggestions {
             s.push(suggest);
+        } else {
+            d.suggestions = Some(vec![suggest]);
         }
         d
     }
@@ -151,5 +164,13 @@ impl DiagnosticResult {
             d.diagnostics = Some(vec![diagnostic.into()]);
         }
         d
+    }
+}
+
+impl Position {
+    pub fn new(line: usize, column: usize) -> Self {
+        let line = Some(line as i64);
+        let column = Some(column as i64);
+        Self { line, column }
     }
 }
