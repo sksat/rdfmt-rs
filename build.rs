@@ -24,7 +24,14 @@ fn download_schema(dir: &str, file: &str) -> Result<(), Box<dyn std::error::Erro
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let out_dir = env::var("OUT_DIR").unwrap();
-    let schema_dir = format!("{}/json_schema", out_dir);
+
+    let local_schema = env::var("CARGO_FEATURE_BUILD_WITH_LOCAL_SCHEMA");
+    let schema_dir = if let Ok(_) = local_schema {
+        "json_schema".to_string()
+    } else {
+        format!("{}/json_schema", out_dir)
+    };
+
     let gen_dir = format!("{}/generated", out_dir);
 
     if Path::new(&schema_dir).exists() {
@@ -46,8 +53,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         //"Source.jsonschema",
         //"Suggestion.jsonschema",
     ];
-
-    //download_schema(&schema_dir, "DiagnosticResult.jsonschema")?;
 
     let mut code = String::new();
 
