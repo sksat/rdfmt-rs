@@ -1,5 +1,4 @@
 use rdfmt::*;
-use serde_json::json;
 
 #[test]
 fn gen_rdjsonl() {

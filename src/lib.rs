@@ -174,3 +174,15 @@ impl Position {
         Self { line, column }
     }
 }
+
+impl Location {
+    pub fn new(path: String, start: Position, end: Option<Position>) -> Self {
+        Self {
+            path: Some(path),
+            range: Some(Range {
+                start: Some(start),
+                end,
+            }),
+        }
+    }
+}
