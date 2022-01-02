@@ -3,6 +3,12 @@
     "config:base"
   ],
   "lockFileMaintenance": { "enabled": true },
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ],
   "regexManagers": [
     {
       "fileMatch": ["^rust-toolchain(\\.toml)?$"],
