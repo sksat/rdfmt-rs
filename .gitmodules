@@ -1,0 +1,4 @@
+[submodule "reviewdog"]
+	path = reviewdog
+	url = https://github.com/reviewdog/reviewdog
+	branch = v0.13.1
