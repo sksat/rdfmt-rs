@@ -1,5 +1,4 @@
 use rdfmt::*;
-use serde_json::json;
 
 #[test]
 fn gen_rdjsonl() {
@@ -12,11 +11,11 @@ fn gen_rdjsonl() {
         column: Some(18),
     };
     let rdjsonl = RdJsonl::error()
-        .location(Location {
+        .with_location(Location {
             path: Some("<file path>".to_string()),
             range: Some(Range { start, end: None }),
         })
-        .message("<msg>".to_string());
+        .with_message("<msg>".to_string());
 
     assert_eq!(
         r#"{"location":{"path":"<file path>","range":{"start":{"column":15,"line":14}}},"message":"<msg>","severity":"ERROR"}"#,
@@ -27,39 +26,39 @@ fn gen_rdjsonl() {
 #[test]
 fn gen_rdjson() {
     let rdjson = RdJson::warning()
-        .source(
+        .with_source(
             Source {
                 name: Some("super lint".to_string()),
                 url: Some("https://example.com/url/to/super-lint".to_string()),
             }
             .into(),
         )
-        .diagnost(
+        .with_diagnost(
             Diagnostic::error()
-                .message("<msg>".to_string())
-                .location(Location {
+                .with_message("<msg>".to_string())
+                .with_location(Location {
                     path: Some("<file path>".to_string()),
                     range: Some(Range {
                         start: Some(Position::new(14, 15)),
                         end: None,
                     }),
                 })
-                .code(Code {
+                .with_code(Code {
                     value: Some("RULE1".to_string()),
                     url: Some("https://example.com/url/to/super-lint/RULE1".to_string()),
                 }),
         )
-        .diagnost(
+        .with_diagnost(
             Diagnostic::warning()
-                .message("<msg>".to_string())
-                .location(Location {
+                .with_message("<msg>".to_string())
+                .with_location(Location {
                     path: Some("<file path>".to_string()),
                     range: Some(Range {
                         start: Some(Position::new(14, 15)),
                         end: Some(Position::new(14, 18)),
                     }),
                 })
-                .suggest("<replacement text>".to_string()),
+                .with_suggest("<replacement text>".to_string()),
         );
     let json_str = serde_json::to_string_pretty(&rdjson).unwrap();
 

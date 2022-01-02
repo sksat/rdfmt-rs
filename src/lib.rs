@@ -70,13 +70,6 @@ pub struct Rule {
 }
 
 impl Diagnostic {
-    pub fn rule(self, rule: Rule) -> Self {
-        let mut d = self;
-        d.source = Some(rule.source);
-        d.code = Some(rule.code);
-        d
-    }
-
     // severity
     pub fn error() -> Self {
         Self::from_severity(Severity::Error)
@@ -94,25 +87,32 @@ impl Diagnostic {
         }
     }
 
-    pub fn location(self, location: Location) -> Self {
+    pub fn with_rule(self, rule: Rule) -> Self {
+        let mut d = self;
+        d.source = Some(rule.source);
+        d.code = Some(rule.code);
+        d
+    }
+
+    pub fn with_location(self, location: Location) -> Self {
         let mut d = self;
         d.location = Some(location);
         d
     }
 
-    pub fn message(self, message: String) -> Self {
+    pub fn with_message(self, message: String) -> Self {
         let mut d = self;
         d.message = Some(message);
         d
     }
 
-    pub fn code(self, code: Code) -> Self {
+    pub fn with_code(self, code: Code) -> Self {
         let mut d = self;
         d.code = Some(code);
         d
     }
 
-    pub fn suggest(self, suggest: String) -> Self {
+    pub fn with_suggest(self, suggest: String) -> Self {
         let mut d = self.clone();
         let range = self
             .location
@@ -133,12 +133,6 @@ impl Diagnostic {
 }
 
 impl DiagnosticResult {
-    pub fn source(self, source: Source) -> Self {
-        let mut d = self;
-        d.source = Some(source.into());
-        d
-    }
-
     // severity
     pub fn error() -> Self {
         Self::from_severity(Severity::Error)
@@ -156,7 +150,13 @@ impl DiagnosticResult {
         }
     }
 
-    pub fn diagnost(self, diagnostic: Diagnostic) -> Self {
+    pub fn with_source(self, source: Source) -> Self {
+        let mut d = self;
+        d.source = Some(source.into());
+        d
+    }
+
+    pub fn with_diagnost(self, diagnostic: Diagnostic) -> Self {
         let mut d = self;
         if let Some(ref mut ds) = d.diagnostics {
             ds.push(diagnostic.into());
@@ -172,5 +172,17 @@ impl Position {
         let line = Some(line as i64);
         let column = Some(column as i64);
         Self { line, column }
+    }
+}
+
+impl Location {
+    pub fn new(path: String, start: Position, end: Option<Position>) -> Self {
+        Self {
+            path: Some(path),
+            range: Some(Range {
+                start: Some(start),
+                end,
+            }),
+        }
     }
 }
