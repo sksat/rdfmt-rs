@@ -1,6 +1,6 @@
 [package]
 name = "rdfmt"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 repository = "https://github.com/sksat/rdfmt-rs"
@@ -8,6 +8,13 @@ authors = ["sksat <sksat@sksat.net>"]
 readme = "README.md"
 description = "Reviewdog Diagnostic Format Rust Library"
 license = "MIT"
+
+[features]
+default = []
+build-with-local-schema = [] # empty feature for build with local jsonschema files(for docs.rs)
+
+[package.metadata.docs.rs]
+features = ["build-with-local-schema"]
 
 [dependencies]
 serde = { version = "1.0.133", features = ["derive"] }

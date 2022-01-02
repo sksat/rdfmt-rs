@@ -15,16 +15,30 @@ fn schema_url(file: &str) -> String {
 
 fn download_schema(dir: &str, file: &str) -> Result<(), Box<dyn std::error::Error>> {
     let url = schema_url(file);
-    let schema = reqwest::blocking::get(url)?.text()?;
-    let mut file = fs::File::create(format!("{}/{}", dir, file))?;
-    file.write_all(schema.as_bytes())?;
+
+    let file = format!("{}/{}", dir, file);
+    let file = Path::new(&file);
+
+    // skip download if file already exists
+    if !file.exists() {
+        let schema = reqwest::blocking::get(url)?.text()?;
+        let mut file = fs::File::create(file)?;
+        file.write_all(schema.as_bytes())?;
+    }
 
     Ok(())
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let out_dir = env::var("OUT_DIR").unwrap();
-    let schema_dir = format!("{}/json_schema", out_dir);
+
+    let local_schema = env::var("CARGO_FEATURE_BUILD_WITH_LOCAL_SCHEMA");
+    let schema_dir = if local_schema.is_ok() {
+        "json_schema".to_string()
+    } else {
+        format!("{}/json_schema", out_dir)
+    };
+
     let gen_dir = format!("{}/generated", out_dir);
 
     if Path::new(&schema_dir).exists() {
@@ -46,8 +60,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         //"Source.jsonschema",
         //"Suggestion.jsonschema",
     ];
-
-    //download_schema(&schema_dir, "DiagnosticResult.jsonschema")?;
 
     let mut code = String::new();
 
