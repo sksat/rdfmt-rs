@@ -9,6 +9,7 @@ on:
   pull_request:
     paths:
       - 'src/**'
+      - 'build.rs'
       - 'Cargo.toml'
       - 'Cargo.lock'
       - 'rust-toolchain'

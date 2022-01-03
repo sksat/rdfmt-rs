@@ -42,7 +42,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let gen_dir = format!("{}/generated", out_dir);
 
     if Path::new(&schema_dir).exists() {
-        fs::remove_dir_all(&schema_dir).unwrap();
+        // skip remvoe schema directory on docs.rs
+        if local_schema.is_err() {
+            fs::remove_dir_all(&schema_dir).unwrap();
+        }
     }
     fs::create_dir(&schema_dir).unwrap();
     if Path::new(&gen_dir).exists() {
