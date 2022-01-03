@@ -13,10 +13,10 @@ fn schema_url(file: &str) -> String {
     )
 }
 
-fn download_schema(dir: &str, file: &str) -> Result<(), Box<dyn std::error::Error>> {
+fn download_schema(dir: &Path, file: &str) -> Result<(), Box<dyn std::error::Error>> {
     let url = schema_url(file);
 
-    let file = format!("{}/{}", dir, file);
+    let file = format!("{}/{}", dir.to_str().unwrap(), file);
     let file = Path::new(&file);
 
     // skip download if file already exists
@@ -41,13 +41,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let gen_dir = format!("{}/generated", out_dir);
 
-    if Path::new(&schema_dir).exists() {
-        // skip remvoe schema directory on docs.rs
-        if local_schema.is_err() {
+    let schema_dir = Path::new(&schema_dir);
+
+    if local_schema.is_ok() {
+        if !schema_dir.exists() {
+            // create schema_dir on local machine(not docs.rs)
+            // when local_schema for before publish build
+            fs::create_dir(&schema_dir).unwrap();
+        }
+    } else {
+        if Path::new(&schema_dir).exists() {
+            // skip remvoe schema directory on docs.rs
             fs::remove_dir_all(&schema_dir).unwrap();
         }
+        fs::create_dir(&schema_dir).unwrap();
     }
-    fs::create_dir(&schema_dir).unwrap();
+
     if Path::new(&gen_dir).exists() {
         fs::remove_dir_all(&gen_dir).unwrap();
     }
@@ -79,7 +88,7 @@ pub mod {} {{
 }}"#,
             name.to_lowercase(),
             name,
-            &schema_dir,
+            &schema_dir.to_str().unwrap(),
             file
         );
     }
