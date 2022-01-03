@@ -50,3 +50,8 @@ jobs:
         uses: actions-rs/cargo@v1.0.3
         with:
           command: test
+
+      - name: generate document
+        uses: actions-rs/cargo@v1.0.3
+        with:
+          command: doc
