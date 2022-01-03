@@ -23,6 +23,12 @@ fn download_schema(dir: &Path, file: &str) -> Result<(), Box<dyn std::error::Err
     if !file.exists() {
         let schema = reqwest::blocking::get(url)?.text()?;
         let mut file = fs::File::create(file)?;
+
+        // 汚物は消毒だ〜！(#12)
+        let schema = schema
+            .replace("\\u003c", "\\u003c ")
+            .replace("\\u003e", "\\u003e ");
+
         file.write_all(schema.as_bytes())?;
     }
 
