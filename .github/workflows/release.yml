@@ -17,6 +17,7 @@ env:
 jobs:
   release:
     runs-on: ubuntu-latest
+    needs: gen_doc
 
     steps:
       - uses: actions/checkout@v2
@@ -31,6 +32,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
+    needs: gen_doc
 
     steps:
       - uses: actions/checkout@v2
@@ -68,3 +70,24 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           cargo publish --features default,build-with-local-schema --allow-dirty
+
+  gen_doc:
+    name: generate document test for docs.rs
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: remove rust-toolchain for set docs.rs Rust version
+        run: rm rust-toolchain
+
+      - uses: actions-rs/toolchain@v1.0.7
+        with:
+          toolchain: nightly-2021-12-30
+          override: true
+
+      - name: check cargo version
+        run: cargo --version
+
+      - name: gen doc
+        run: cargo doc
