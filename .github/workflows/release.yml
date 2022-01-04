@@ -8,11 +8,14 @@ on:
     paths:
       - '.github/workflows/release.yml'
 
+permissions:
+  contents: write
+
 env:
   CARGO_INCREMENTAL: 0
 
 jobs:
-  release:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,11 +30,27 @@ jobs:
         with:
           toolchain: ${{ steps.toolchain.outputs.toolchain }}
 
-      - name: package
+      - name: prepare for package(download jsonschema for docs.rs build)
         run: |
           cargo clean
-          cargo package --features build-with-local-schema
-
-      - name: publish
+          cargo build --features build-with-local-schema
+      - name: check downloaded jsonschema
         run: |
-          cargo publish --dry-run --features default,build-with-local-schema --allow-dirty --no-verify
+          ls json_schema/*.jsonschema
+
+      - name: package
+        run: |
+          cargo package --features build-with-local-schema --allow-dirty
+      - name: check package
+        run: |
+          echo "$ ls"; ls
+          echo "$ ls target/package"; ls target/package/
+          echo "$ ls target/package/rdfmt-*/json_schema"; ls target/package/rdfmt-*/json_schema
+
+      - name: publish(dry run)
+        run: |
+          cargo publish --features default,build-with-local-schema --allow-dirty --dry-run
+      - name: publish
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          cargo publish --features default,build-with-local-schema --allow-dirty
