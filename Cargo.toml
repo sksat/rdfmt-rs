@@ -20,7 +20,7 @@ build-with-local-schema = [] # empty feature for build with local jsonschema fil
 serde = { version = "1.0.152", features = ["derive"] }
 serde_json = "1.0.93"
 schemafy = "0.6.0"
-serde_variant = "0.1.1"
+serde_variant = "0.1.2"
 
 [build-dependencies]
 reqwest = { version = "0.11.14", default-features = false, features = ["blocking", "rustls-tls"] }
