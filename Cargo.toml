@@ -18,7 +18,7 @@ build-with-local-schema = [] # empty feature for build with local jsonschema fil
 
 [dependencies]
 serde = { version = "1.0.152", features = ["derive"] }
-serde_json = "1.0.93"
+serde_json = "1.0.94"
 schemafy = "0.6.0"
 serde_variant = "0.1.2"
 
