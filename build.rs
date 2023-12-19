@@ -5,7 +5,7 @@ use std::path::Path;
 
 fn schema_url(file: &str) -> String {
     let repository = "reviewdog/reviewdog";
-    let tag = "v0.15.0";
+    let tag = "v0.16.0";
     let dir = "proto/rdf/jsonschema";
     format!(
         "https://raw.githubusercontent.com/{}/{}/{}/{}",
