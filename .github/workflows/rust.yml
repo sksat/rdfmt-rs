@@ -31,11 +31,10 @@ jobs:
           echo -n "::set-output name=toolchain::"
           awk -F'[ ="]+' '$1 == "channel" { print $2 }' rust-toolchain
 
-      - uses: actions-rs/toolchain@v1.0.7
+      - uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: ${{ steps.toolchain.outputs.toolchain }}
           components: clippy
-          override: true
 
       - name: cache dependencies
         uses: Swatinem/rust-cache@v2.7.3
@@ -47,11 +46,7 @@ jobs:
           clippy_flags: --all-features
 
       - name: unit test
-        uses: actions-rs/cargo@v1.0.3
-        with:
-          command: test
+        run: cargo test
 
       - name: generate document
-        uses: actions-rs/cargo@v1.0.3
-        with:
-          command: doc
+        run: cargo doc

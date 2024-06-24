@@ -42,7 +42,7 @@ jobs:
         run: |
           echo -n "::set-output name=toolchain::"
           awk -F'[ ="]+' '$1 == "channel" { print $2 }' rust-toolchain
-      - uses: actions-rs/toolchain@v1.0.7
+      - uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: ${{ steps.toolchain.outputs.toolchain }}
 
@@ -83,10 +83,9 @@ jobs:
       - name: remove rust-toolchain for set docs.rs Rust version
         run: rm rust-toolchain
 
-      - uses: actions-rs/toolchain@v1.0.7
+      - uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: nightly-2024-06-23
-          override: true
 
       - name: check cargo version
         run: cargo --version
