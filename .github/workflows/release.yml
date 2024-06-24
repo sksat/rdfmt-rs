@@ -85,7 +85,7 @@ jobs:
 
       - uses: actions-rs/toolchain@v1.0.7
         with:
-          toolchain: nightly-2021-12-30
+          toolchain: nightly-2024-06-23
           override: true
 
       - name: check cargo version
