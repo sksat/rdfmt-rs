@@ -30,8 +30,7 @@ fn gen_rdjson() {
             Source {
                 name: Some("super lint".to_string()),
                 url: Some("https://example.com/url/to/super-lint".to_string()),
-            }
-            .into(),
+            },
         )
         .with_diagnost(
             Diagnostic::error()
@@ -64,7 +63,7 @@ fn gen_rdjson() {
 
     println!(
         "diff: {}",
-        prettydiff::diff_lines(&RDJSON_EXAMPLE, &json_str)
+        prettydiff::diff_lines(RDJSON_EXAMPLE, &json_str)
     );
     assert_eq!(RDJSON_EXAMPLE, json_str);
 }

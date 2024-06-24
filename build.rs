@@ -53,14 +53,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         if !schema_dir.exists() {
             // create schema_dir on local machine(not docs.rs)
             // when local_schema for before publish build
-            fs::create_dir(&schema_dir).unwrap();
+            fs::create_dir(schema_dir).unwrap();
         }
     } else {
         if Path::new(&schema_dir).exists() {
             // skip remvoe schema directory on docs.rs
-            fs::remove_dir_all(&schema_dir).unwrap();
+            fs::remove_dir_all(schema_dir).unwrap();
         }
-        fs::create_dir(&schema_dir).unwrap();
+        fs::create_dir(schema_dir).unwrap();
     }
 
     if Path::new(&gen_dir).exists() {
@@ -82,7 +82,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut code = String::new();
 
     for file in schema_files {
-        download_schema(&schema_dir, file)?;
+        download_schema(schema_dir, file)?;
         //let name = Path::new(&file).file_prefix().unwrap();
         let name = file.split('.').next().unwrap();
 
