@@ -20,7 +20,7 @@ jobs:
     needs: gen_doc
 
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.0
 
       - name: Release
         uses: softprops/action-gh-release@v2.0.8
@@ -35,7 +35,7 @@ jobs:
     needs: gen_doc
 
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.0
 
       - name: Get Rust toolchain
         id: toolchain
@@ -77,7 +77,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.0
 
       - name: remove rust-toolchain for set docs.rs Rust version
         run: rm rust-toolchain
