@@ -84,7 +84,7 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@v1
         with:
-          toolchain: nightly-2026-08-11
+          toolchain: nightly-2026-08-12
 
       - name: check cargo version
         run: cargo --version
